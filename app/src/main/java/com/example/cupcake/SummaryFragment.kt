@@ -50,6 +50,7 @@ class SummaryFragment : Fragment() {
 
         binding?.apply {
             sendButton.setOnClickListener { sendOrder() }
+            viewModel = sharedViewModel
         }
     }
 
