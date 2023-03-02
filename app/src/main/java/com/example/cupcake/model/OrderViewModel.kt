@@ -20,7 +20,10 @@ class OrderViewModel : ViewModel() {
     val price : LiveData<Double> = _price
 
     val dateOptions = getPickupOptions()
-
+    companion object {
+        private const val PRICE_PER_CUPCAKE = 2.00
+        private const val SAME_DAY_PICKUP_CHARGE = 3.00
+    }
     init {
         resetOrder()
     }
@@ -34,6 +37,7 @@ class OrderViewModel : ViewModel() {
 
     fun setQuantity(numberOfCupCakes: Int) {
         _quantity.value = numberOfCupCakes
+        updatePrice()
     }
 
     fun setFlavor(desiredFlavor: String) {
@@ -42,8 +46,18 @@ class OrderViewModel : ViewModel() {
 
     fun setDate(pickupDate: String) {
         _date.value = pickupDate
+        updatePrice()
     }
 
+    fun updatePrice() {
+        var calculatedPrice : Double =(_quantity.value?:0) * PRICE_PER_CUPCAKE
+
+        if(_date.value == dateOptions[0]) {
+            calculatedPrice += SAME_DAY_PICKUP_CHARGE
+        }
+
+        _price.value = calculatedPrice
+    }
     fun hasNoFlavorSet(): Boolean {
         return _flavor.value.isNullOrEmpty()
     }
@@ -60,4 +74,6 @@ class OrderViewModel : ViewModel() {
 
         return options
     }
+
+
 }
